@@ -1,22 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { CACHE_MANAGER, Inject, Injectable, Module } from '@nestjs/common';
+import { CACHE_MANAGER, Inject } from '@nestjs/common';
 import { parse, format as formatDate } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 import { Cache } from 'cache-manager';
-import { CacheModule } from '@nestjs/cache-manager';
-
-@Module({
-  imports: [CacheModule.register({ ttl: 60 * 60 })],
-})
-@Injectable()
 export class DateParser {
   private format: string;
   private timezone?: string;
-  constructor(
-    format: string,
-    timezone?: string,
-    @Inject(CACHE_MANAGER) private cacheService?: Cache,
-  ) {
+  constructor(format: string, timezone?: string) {
     this.format = format;
     this.timezone = timezone;
   }
@@ -26,12 +16,8 @@ export class DateParser {
     return new Date(date.getTime() + offsetMillis);
   }
 
-  async parseDate(date: string): Promise<Date> {
+  parseDate(date: string): Date {
     // This assumes date is in the format 'dd-mm-yyyy'
-    const cachedDate = await this.cacheService.get(date);
-    if (cachedDate instanceof Date) {
-      return cachedDate;
-    }
 
     if (this.format === 'dd-mm-yyyy' || this.format === 'dd-MM-yyyy') {
       const parts = date.split('-');
@@ -40,7 +26,6 @@ export class DateParser {
         Number(parts[1]) - 1, // JavaScript months are 0-indexed
         Number(parts[0]),
       );
-      await this.cacheService.set(date, this.toUtc(parsedDate), 10000);
       return this.toUtc(parsedDate);
     } else if (this.format === 'dd/MM/yy') {
       const parts = date.split('/');
@@ -51,7 +36,6 @@ export class DateParser {
         Number(parts[1]) - 1, // JavaScript months are 0-indexed
         Number(parts[0]),
       );
-      await this.cacheService.set(date, this.toUtc(parsedDate), 10000);
       return this.toUtc(parsedDate);
     }
   }

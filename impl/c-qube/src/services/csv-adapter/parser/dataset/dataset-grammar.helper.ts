@@ -59,13 +59,13 @@ export const createDatasetDataToBeInserted = async (
         if (timeDimension === 'Daily') {
           rowObject['date'] = date;
         } else if (timeDimension === 'Weekly') {
-          rowObject['week'] = DateParser.getWeek(await date);
-          rowObject['year'] = DateParser.getYear(await date);
+          rowObject['week'] = DateParser.getWeek(date);
+          rowObject['year'] = DateParser.getYear(date);
         } else if (timeDimension === 'Monthly') {
-          rowObject['month'] = DateParser.getMonth(await date);
-          rowObject['year'] = DateParser.getYear(await date);
+          rowObject['month'] = DateParser.getMonth(date);
+          rowObject['year'] = DateParser.getYear(date);
         } else if (timeDimension === 'Yearly') {
-          rowObject['year'] = DateParser.getYear(await date);
+          rowObject['year'] = DateParser.getYear(date);
         }
       }
       datasetEvents.push({ data: rowObject, spec: eventGrammar });

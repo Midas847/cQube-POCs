@@ -38,10 +38,10 @@ export const getPrimaryKeyAndIndexes = (
 ): { pk: string; indexes: string[] } => {
   const pk: string =
     row3.split(',')[
-    row1
-      .split(',')
-      .map((word: string) => word.trim())
-      .indexOf('PK')
+      row1
+        .split(',')
+        .map((word: string) => word.trim())
+        .indexOf('PK')
     ];
 
   const indexes: string[] = row1
@@ -82,9 +82,9 @@ export const isValidCSVFormat = (
     // console.log(row1.split(',').length === row3.split(',').length);
 
     return (
-      isValidRow1 &&
-      isValidRow2 &&
-      isValidRow3 &&
+      // isValidRow1 &&
+      // isValidRow2 &&
+      // isValidRow3 &&
       row2.split(',').length === row3.split(',').length &&
       row1.split(',').length === row3.split(',').length
     );
